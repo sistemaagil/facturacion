@@ -9,4 +9,6 @@ class Cliente (models.Model):
     fecha_nacimiento = models.DateField(auto_now=False, auto_now_add=False)
     monto_primera_compra = models.FloatField()
     tipo = models.ForeignKey(TipoCliente, on_delete=models.PROTECT)
+    email = models.CharField(max_length=80)
+    phone = models.CharField(max_length=80)
 # otros modelos...

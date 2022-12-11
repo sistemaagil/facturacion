@@ -6,7 +6,6 @@ router = DefaultRouter()
 router.register('api/cliente', ClienteViewSet)
 router.register('api/tipocliente', TipoClienteViewSet)
 
-
 urlpatterns = []
 
 urlpatterns += router.urls
