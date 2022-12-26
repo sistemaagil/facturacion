@@ -1,5 +1,8 @@
 package security.api_authz.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import security.api_authz.entity.User;
+import security.api_authz.entity.UserAuthority;
 import security.api_authz.service.UserService;
 
 
@@ -53,5 +57,17 @@ public class UserController {
     public void deleteById(@PathVariable long id){
         userService.deleteById(id);
     }
+
+    @GetMapping("/hasAuthority/")
+    public ResponseEntity<String> hasAuthority(@RequestBody UserAuthority entity){
+
+        if (entity==null || entity.getUsername() ==null || entity.getAuthority() == null )
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if (userService.hasAuthority(entity.getUsername(), entity.getAuthority()))
+            return ResponseEntity.ok("ok");
+        else
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
 }
 

@@ -95,6 +95,8 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-
+    public boolean hasAuthority(String username, String authority){
+        return userRepository.hasAuthority(username, authority);
+    }
     
 }

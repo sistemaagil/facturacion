@@ -6,8 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
 
 import lombok.Data;
 
@@ -26,6 +28,9 @@ public class Role {
     private boolean enabled;
     
     @ManyToMany
+    @JoinTable(name = "roles_authorities",
+        joinColumns = @JoinColumn(name = "role_id"),
+        inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private List<Authority> authorities;
 
 

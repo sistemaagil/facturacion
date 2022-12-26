@@ -42,7 +42,7 @@ public class JWTAuthorizationFilter  extends BasicAuthenticationFilter {
         UsernamePasswordAuthenticationToken authentication = null;
         try {
             authentication = getAuthentication(header);
-        }catch (SignatureException ex) {
+        }catch (RuntimeException ex ) {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json; charset=utf-8");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
