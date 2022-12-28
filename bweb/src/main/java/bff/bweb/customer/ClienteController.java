@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bff.bweb.authz.UserClient;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public class ClienteController {
 
     @Autowired ClienteClient client;
-    @Autowired UserClient userClient;
+    
 
     @GetMapping("/")
     public List<ClienteDTO> findAll(@RequestHeader("Authorization") String authHeader) {
@@ -54,12 +52,11 @@ public class ClienteController {
     public ClienteDTO update(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody ClienteDTO entity){
         return client.update(authHeader, id, entity);
     }
-
-
+    
     @PatchMapping("/{id}/")
     public ClienteDTO partialUpdate(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody Map<String, Object> fields){
 
-        ClienteDTO clienteDTO = client.findClienteById(authHeader, id);
+        ClienteDTO ClienteDTO = client.findClienteById(authHeader, id);
 
         // itera sobre los campos que se desean actualizar
         for (Map.Entry<String, Object> field : fields.entrySet()) {
@@ -70,13 +67,11 @@ public class ClienteController {
             try {
                 Field campoEntidad = ClienteDTO.class.getDeclaredField(fieldName);
                 campoEntidad.setAccessible(true);
-                campoEntidad.set(clienteDTO, fieldValue);
+                campoEntidad.set(ClienteDTO, fieldValue);
             } catch (NoSuchFieldException | IllegalAccessException ex) {
                 // maneja la excepción si ocurre algún error al acceder al campo
             }
         }
-
-        return client.update(authHeader, id, clienteDTO);
+        return client.update(authHeader, id, ClienteDTO);
     }
-
 }

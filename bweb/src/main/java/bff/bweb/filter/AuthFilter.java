@@ -19,8 +19,13 @@ import org.springframework.stereotype.Component;
 import bff.bweb.authz.UserClient;
 import feign.FeignException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class AuthFilter implements Filter {
+
+    private Logger logger = LoggerFactory.getLogger(AuthFilter.class);
 
     @Autowired UserClient userClient;
 
@@ -42,6 +47,7 @@ public class AuthFilter implements Filter {
                     chain.doFilter(request, response);
                 }
             }catch (FeignException exception){
+                logger.error(exception.getLocalizedMessage());
                 ((HttpServletResponse) response).setStatus(HttpStatus.FORBIDDEN.value());
             }
         }

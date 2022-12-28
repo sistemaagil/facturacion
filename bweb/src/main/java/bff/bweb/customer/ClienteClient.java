@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(name = "clientefacturacion.bff.cliente", url = "http://localhost:8000/api/cliente")
+@FeignClient(name = "bff.cliente", url = "http://localhost:8000/api/cliente")
 public interface ClienteClient {
-
 
     @GetMapping("/{id}/")
     ClienteDTO findClienteById(@RequestHeader("Authorization") String authHeader, @PathVariable("id") Long id);
@@ -29,10 +28,4 @@ public interface ClienteClient {
     @PutMapping("/{id}/")
     ClienteDTO update(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("id")  Long id, ClienteDTO entity);
 
-    /*
-    PATCH No soportado, Utilice PUT en su lugar
-    @PatchMapping("/{id}/")
-    ClienteDTO partialUpdate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("id")  Long id, Map<String, Object> fields);
-    */
-    
 }

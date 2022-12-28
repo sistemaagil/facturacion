@@ -43,7 +43,7 @@ public class RoleController {
     }
 
     @PreAuthorize("hasAuthority('Role_Write')")
-    @PutMapping("/")
+    @PutMapping("/{id}/")
     public Role update(@RequestBody Role role){
         return roleService.save(role);
     }

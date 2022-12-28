@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('User_Write')")
-    @PutMapping("/")
+    @PutMapping("/{id}/")
     public User update(@RequestBody User user){
         return userService.save(user);
     }

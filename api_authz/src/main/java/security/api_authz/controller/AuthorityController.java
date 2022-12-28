@@ -43,7 +43,7 @@ public class AuthorityController {
     }
 
     @PreAuthorize("hasAuthority('Authority_Write')")
-    @PutMapping("/")
+    @PutMapping("/{id}/")
     public Authority update(@RequestBody Authority authority){
         return authorityService.save(authority);
     }
