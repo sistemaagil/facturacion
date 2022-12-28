@@ -28,4 +28,7 @@ public interface ClienteClient {
     @PutMapping("/{id}/")
     ClienteDTO update(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("id")  Long id, ClienteDTO entity);
 
+    @PutMapping("/{id}/completardatos/")
+    ClienteDTO completardatos(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("id")  Long id);
+
 }

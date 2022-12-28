@@ -89,24 +89,5 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No access");
     }
-
-    @GetMapping("/hasAuthority2/")
-    public ResponseEntity<String> hasAuthority2(@RequestHeader("Authorization") String authHeader, @RequestHeader("Endpoint") String endpointHeader){
-
-        if(authHeader==null||!authHeader.startsWith("Bearer")){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        String token = authHeader.replace("Bearer ", "");
-        String username = JWTUtil.getUsername(token);
-
-        if (username==null || endpointHeader == null )
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        if (userService.hasAuthority(username, endpointHeader))
-            return ResponseEntity.ok("ok");
-        else
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No access");
-    }
-
 }
 

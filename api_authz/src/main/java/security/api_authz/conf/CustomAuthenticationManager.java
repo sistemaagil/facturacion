@@ -7,7 +7,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import jakarta.transaction.Transactional;
 import security.api_authz.entity.User;
@@ -16,8 +15,7 @@ import security.api_authz.service.UserService;
 public class CustomAuthenticationManager implements AuthenticationManager {
     @Autowired
     UserService userService;
-    @Autowired
-    BCryptPasswordEncoder encoder;
+
 
     @Transactional
     @Override
@@ -31,7 +29,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             throw new BadCredentialsException("Usuario o contraseña inválidos");
         }
 
-        if (!encoder.matches(password,user.getPassword())){
+        if (!userService.matchPassword(password,user.getPassword())){
             throw new BadCredentialsException("Usuario o contraseña inválidos");
         }
         user = userService.getUserWithRolesByUsername(username);

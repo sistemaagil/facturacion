@@ -12,7 +12,7 @@ class ClienteViewSet ( viewsets.ModelViewSet ):
     serializer_class = ClienteSerializer
     queryset = Cliente.objects.all()
     
-    @action(detail=True, methods=['patch'])
+    @action(detail=True, methods=['put'])
     def completardatos(self, request: Request, *args, **kwargs):
         #Extrae el ID del cliente enviado en la url
         id = kwargs['pk']

@@ -74,4 +74,10 @@ public class ClienteController {
         }
         return client.update(authHeader, id, ClienteDTO);
     }
+
+    @PatchMapping("/{id}/completardatos/")
+    public ClienteDTO completardatos(@RequestHeader("Authorization") String authHeader, @PathVariable Long id){
+        return client.completardatos(authHeader, id);
+    }
+
 }

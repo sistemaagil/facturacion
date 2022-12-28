@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -27,9 +28,12 @@ public class UserService implements UserDetailsService {
     @Autowired
     RoleService roleService;
 
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     //Create and update
     public User save(User entity){
+        
+        entity.setPassword(encoder.encode(entity.getPassword()));
         return userRepository.save(entity);
     }
 
@@ -99,4 +103,7 @@ public class UserService implements UserDetailsService {
         return userRepository.hasAuthority(username, authority);
     }
     
+    public boolean matchPassword(String passwordIn, String userPassword){
+        return encoder.matches(passwordIn, userPassword);
+    }
 }
