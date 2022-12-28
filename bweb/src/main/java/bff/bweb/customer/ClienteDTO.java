@@ -12,5 +12,7 @@ public class ClienteDTO {
     private String nro_identificacion;
     private Date fecha_nacimiento;
     private double monto_primera_compra;
-
+    private String email;
+    private String phone;
+    private Long tipo;
 }

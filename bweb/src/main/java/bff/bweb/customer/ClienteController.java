@@ -1,5 +1,6 @@
 package bff.bweb.customer;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,6 @@ public class ClienteController {
 
     @Autowired ClienteClient client;
     @Autowired UserClient userClient;
-    @Autowired CustomerClient customerClient;
 
     @GetMapping("/")
     public List<ClienteDTO> findAll(@RequestHeader("Authorization") String authHeader) {
@@ -51,12 +51,32 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}/")
-    public ClienteDTO update(@RequestHeader("Authorization") String authHeader, @RequestBody ClienteDTO entity){
-        return client.update(authHeader, entity);
+    public ClienteDTO update(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody ClienteDTO entity){
+        return client.update(authHeader, id, entity);
     }
+
 
     @PatchMapping("/{id}/")
     public ClienteDTO partialUpdate(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody Map<String, Object> fields){
-        return customerClient.partialUpdate(authHeader, id, fields);
+
+        ClienteDTO clienteDTO = client.findClienteById(authHeader, id);
+
+        // itera sobre los campos que se desean actualizar
+        for (Map.Entry<String, Object> field : fields.entrySet()) {
+            String fieldName = field.getKey();
+            Object fieldValue = field.getValue();
+            
+            // utiliza reflection para establecer el valor del campo en la entidad
+            try {
+                Field campoEntidad = ClienteDTO.class.getDeclaredField(fieldName);
+                campoEntidad.setAccessible(true);
+                campoEntidad.set(clienteDTO, fieldValue);
+            } catch (NoSuchFieldException | IllegalAccessException ex) {
+                // maneja la excepción si ocurre algún error al acceder al campo
+            }
+        }
+
+        return client.update(authHeader, id, clienteDTO);
     }
+
 }

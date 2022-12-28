@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(name = "clientefacturacion.bff.cliente", url = "http://localhost:8000/api/cliente")
 public interface ClienteClient {
@@ -30,9 +28,12 @@ public interface ClienteClient {
     void deleteById(@RequestHeader("Authorization") String authorizationHeader,@PathVariable("id")  Long id);
 
     @PutMapping("/{id}/")
-    ClienteDTO update(@RequestHeader("Authorization") String authorizationHeader, ClienteDTO entity);
+    ClienteDTO update(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("id")  Long id, ClienteDTO entity);
 
-    //@RequestMapping(value = "/{id}/", method = RequestMethod.POST, headers = {"X-HTTP-Method-Override=PATCH"})
-    //ClienteDTO partialUpdate(@RequestHeader("Authorization") String authorizationHeader,@RequestHeader("X-HTTP-Method-Override") String RequestMethod.PATCH, @PathVariable("id")  Long id, Map<String, Object> fields);
-
+    /*
+    PATCH No soportado, Utilice PUT en su lugar
+    @PatchMapping("/{id}/")
+    ClienteDTO partialUpdate(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("id")  Long id, Map<String, Object> fields);
+    */
+    
 }
