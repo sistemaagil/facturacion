@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 
-@FeignClient(name = "producto", url = "http://localhost:8000/api/Producto")
+@FeignClient(name = "producto", url = "http://localhost:8000/api/product")
 public interface ProductoClient {
 
     @GetMapping("/{id}/")
