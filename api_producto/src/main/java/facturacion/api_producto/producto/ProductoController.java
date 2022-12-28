@@ -38,7 +38,7 @@ public class ProductoController {
         return productoService.save(entity);
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}/")
     public Producto update(@RequestBody Producto entity){
         return productoService.save(entity);
     }
