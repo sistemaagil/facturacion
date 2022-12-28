@@ -30,8 +30,8 @@ public class AuthorityService {
         return authorityRepository.findAll();
     }
 
-    public List<Authority> findByRoleid(long roleid){
-        return authorityRepository.findByRoleId(roleid);
+    public List<Authority> findByUsername(String username){
+        return authorityRepository.findByUsername(username);
     }
 
     public List<Authority> findByName(String term){

@@ -53,4 +53,10 @@ public class AuthorityController {
     public void deleteById(@PathVariable long id){
         authorityService.deleteById(id);
     }
+
+    @PreAuthorize("hasAuthority('AuthorityByUser_Read')")
+    @GetMapping("/byuser/{id}/")
+    public List<Authority> findByUsename(@PathVariable String username){
+        return authorityService.findByUsername(username);
+    }
 }

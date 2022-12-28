@@ -22,7 +22,7 @@ public interface UserRepository extends CrudRepository <User, Long>{
         "join roles r on (ur.role_id = r.id) "+
         "join roles_authorities ra on (r.id = ra.role_id) "+
         "join authorities a on (ra.authority_id = a.id) "+
-        "where u.username = ?1 and a.name= ?2)",
+        "where u.username = ?1 and a.endpoint= ?2)",
          nativeQuery = true)
     boolean hasAuthority(String username, String authority);
 
