@@ -1,7 +1,7 @@
 package bff.bweb.filter;
 
 import java.io.IOException;
-
+import java.util.Arrays;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import bff.bweb.authz.UserClient;
 import feign.FeignException;
 
+import org.aspectj.weaver.ast.Instanceof;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,12 +37,23 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         ResponseEntity<String> httpResponse;
         String authHeader = httpRequest.getHeader("Authorization");
+
+        if (authHeader==null){
+            ((HttpServletResponse) response).setStatus(HttpStatus.FORBIDDEN.value());
+            return;
+        }
+
         String endpoint = httpRequest.getRequestURI();
         String method = httpRequest.getMethod();
         if (endpoint.equals("/login/")){
             chain.doFilter(request, response);
         }else{
             try {
+                String[] parts = endpoint.split("/");
+                if (esVariable(parts[parts.length-1])){
+                    parts[parts.length-1] = "{id}";
+                }
+                endpoint = String.join("/", parts)+"/";
                 httpResponse = userClient.hasAuthority(authHeader, method+":"+endpoint);
                 if (httpResponse.getStatusCode() == HttpStatus.OK){
                     chain.doFilter(request, response);
@@ -51,6 +63,15 @@ public class AuthFilter implements Filter {
                 ((HttpServletResponse) response).setStatus(HttpStatus.FORBIDDEN.value());
             }
         }
+    }
+
+    private boolean esVariable (String term){
+        try {
+            Integer.parseInt(term);
+        }catch (NumberFormatException e) {
+            return false;
+        }
+        return  true;
     }
     
 }

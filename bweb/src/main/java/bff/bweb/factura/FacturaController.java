@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +36,11 @@ public class FacturaController {
     @GetMapping("/{id}/")
     public FacturaDTO findById(@RequestHeader("Authorization") String authHeader, @PathVariable Long id){
         return client.findFacturaById(authHeader, id);
+    }
+
+    @GetMapping("/pdf/{id}/")
+    public ResponseEntity<byte[]> pdfById(@RequestHeader("Authorization") String authHeader, @PathVariable Long id){
+        return client.pdfById(authHeader, id);
     }
 
     @PostMapping("/")

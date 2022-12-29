@@ -17,19 +17,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+
+
+
 @RestController
 @RequestMapping("api/product")
 @CrossOrigin({"*"})
+/**
+* Controlador del producto
+*/
 public class ProductoController {
     @Autowired ProductoService productoService;
 
+        /**
+    * Returns an Image object that can then be painted on the screen. 
+    * The url argument must specify an absolute <a href="#{@link}">{@link URL}</a>. The name
+    * argument is a specifier that is relative to the url argument. 
+    * <p>
+    * This method always returns immediately, whether or not the 
+    * image exists. When this applet attempts to draw the image on
+    * the screen, the data will be loaded. The graphics primitives 
+    * that draw the image will incrementally paint on the screen. 
+    *
+    * @param  url  an absolute URL giving the base location of the image
+    * @param  name the location of the image, relative to the url argument
+    * @return      the image at the specified URL
+    * @see         Image
+    */
     @GetMapping("/")
     public List<Producto> findAll(){
         return productoService.findAll();
     }
 
+    @Operation(summary = "Entrega un producto por su ID")
     @GetMapping("/{id}/")
-    public Producto findById(@PathVariable Long id){
+    public Producto findById(@PathVariable long id){
         return productoService.findById(id);
     }
 
@@ -38,6 +61,7 @@ public class ProductoController {
         return productoService.save(entity);
     }
 
+    @Operation(summary = "Actualización de un producto por su ID")
     @PutMapping("/{id}/")
     public Producto update(@RequestBody Producto entity){
         return productoService.save(entity);

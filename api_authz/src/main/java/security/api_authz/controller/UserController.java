@@ -78,11 +78,7 @@ public class UserController {
         List<Authority> authorities = authorityService.findByUsername(username);
 
         for (Authority auth: authorities){
-            if (endpointHeader.length() < auth.getEndpoint().length()){
-                continue;
-            }
-            String partialEndpointHeader = endpointHeader.substring(0, auth.getEndpoint().length());
-            if (partialEndpointHeader.equals(auth.getEndpoint())){
+            if (endpointHeader.equals(auth.getEndpoint())){
                 return ResponseEntity.ok("ok");
             }
         }
