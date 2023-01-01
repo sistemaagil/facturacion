@@ -46,7 +46,13 @@ public class AuthFilter implements Filter {
         String endpoint = httpRequest.getRequestURI();
         String method = httpRequest.getMethod();
         if (endpoint.equals("/login/")){
-            chain.doFilter(request, response);
+            try {
+                chain.doFilter(request, response);
+            } catch (Exception e) {
+                logger.error(e.getLocalizedMessage());
+                ((HttpServletResponse) response).setStatus(HttpStatus.UNAUTHORIZED.value());
+            }
+            
         }else{
             try {
                 String[] parts = endpoint.split("/");

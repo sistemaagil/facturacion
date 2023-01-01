@@ -22,7 +22,7 @@ public class JWTUtil {
     private static final String ROLE_CLAIMS="rol";
 
 
-	public String generateToken(String username, String role) {
+	public static String generateToken(String username, String role) {
 		Map<String,Object> map=new HashMap<>();
         map.put(ROLE_CLAIMS,role);
 		return Jwts.builder()

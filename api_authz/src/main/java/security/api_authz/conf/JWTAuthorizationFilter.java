@@ -1,39 +1,30 @@
 package security.api_authz.conf;
 
 import java.io.IOException;
-
-
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import security.api_authz.entity.User;
 import security.api_authz.service.UserService;
 
 
-
-public class JWTAuthorizationFilter  extends BasicAuthenticationFilter {
+public class JWTAuthorizationFilter  extends HttpFilter {
 
     UserService userService;
 
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager, UserService userService) {
-        super(authenticationManager);
-        
+    public JWTAuthorizationFilter(UserService userService) {
         this.userService = userService;
     }
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
+    protected void doFilter(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         String header=request.getHeader(JWTUtil.TOKEN_HEADER);
-        // Filtra aquellos sin token (tal vez acceso sin autorización)
         if(header==null||!header.startsWith(JWTUtil.TOKEN_PREFIX)){
             chain.doFilter(request,response);
             return;
@@ -48,8 +39,6 @@ public class JWTAuthorizationFilter  extends BasicAuthenticationFilter {
             response.getWriter().write(new ObjectMapper().writeValueAsString("No access, "+ex.getMessage()));
             return;
         }
-        
-        // Establece la información de autenticación del usuario y jwtToken genera UsernamePasswordAuthenticationToken
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }

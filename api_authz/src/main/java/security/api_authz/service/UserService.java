@@ -20,7 +20,6 @@ import security.api_authz.repository.UserRepository;
 
 
 @Service
-
 public class UserService implements UserDetailsService {
     
     @Autowired
@@ -36,7 +35,6 @@ public class UserService implements UserDetailsService {
         entity.setPassword(encoder.encode(entity.getPassword()));
         return userRepository.save(entity);
     }
-
     //Read
     public User findById(long id){
         return userRepository.findById(id).orElseThrow();

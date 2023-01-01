@@ -6,10 +6,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import security.api_authz.entity.User;
 
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -21,19 +24,18 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 
+import security.api_authz.service.UserService;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
     private AuthenticationManager authenticationManager;
 
-    private JWTUtil jwtUtil;
-	
-	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    private UserService userService;
+    
+	public JWTAuthenticationFilter(UserService userService) {
     	setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
+        this.userService = userService;
+
     }
-
-
 
 	@Override
     public Authentication attemptAuthentication(HttpServletRequest req,
@@ -53,9 +55,28 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		
 	        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(credenciales[0], credenciales[1], new ArrayList<>());
 	        
-	        Authentication auth = authenticationManager.authenticate(authToken);
+	        Authentication auth = authenticate(authToken);
 	        return auth;
 		}
+
+    @Transactional
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String username = authentication.getName();
+        String password = authentication.getCredentials().toString();
+
+        User user = userService.findByUsername(username);
+        
+        if (user==null) {
+            throw new BadCredentialsException("Usuario o contraseña inválidos");
+        }
+
+        if (!userService.matchPassword(password,user.getPassword())){
+            throw new  BadCredentialsException("Usuario o contraseña inválidos");
+        }
+        user = userService.getUserWithRolesByUsername(username);
+
+        return new UsernamePasswordAuthenticationToken(username, "", user.getAuthorities());
+    }
 	
 	@Override
 	protected void successfulAuthentication(HttpServletRequest req,
@@ -70,7 +91,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .map(authName -> authName.getAuthority()+";")
             .reduce("", String::concat);
         role = role.substring(0, role.length()-1);
-        String token = jwtUtil.generateToken(username, role);
+        String token = JWTUtil.generateToken(username, role);
         res.addHeader("Authorization", "Bearer " + token);
         res.addHeader("Access-Control-Expose-Headers", "Authorization");
 	}
