@@ -15,18 +15,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import java.util.List;
 
+@Tag(name = "Controlador de la factura")
 @RestController
 @RequestMapping("api/factura")
 @CrossOrigin({"*"})
 public class FacturaController {
     @Autowired FacturaService facturaService;
 
+    //@Operation(summary = "Obtiene todas las facturas")
     @GetMapping("/")
     public List<Factura> findAll(){
         return facturaService.findAll();

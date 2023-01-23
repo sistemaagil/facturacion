@@ -2,8 +2,6 @@ package facturacion.api_factura.factura;
 
 import java.io.FileNotFoundException;
 import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +10,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-
 import facturacion.api_factura.cliente.CustomerClient;
 import facturacion.api_factura.cliente.CustomerDTO;
 import jakarta.transaction.Transactional;
@@ -48,17 +45,17 @@ public class FacturaService {
 
     public JasperPrint getFacturaReporte(Long id) {
 
-        Map<String, Object> empParams = new HashMap<String, Object>();
+        Map<String, Object> reportParameters = new HashMap<String, Object>();
         Factura factura = findById(id);
         if (factura.getId()==null)
             return null;
         
-        empParams.put("nro", factura.getNumeroFactura());
-        empParams.put("fecha",Date.valueOf(factura.getFecha()));
+        reportParameters.put("nro", factura.getNumeroFactura());
+        reportParameters.put("fecha",Date.valueOf(factura.getFecha()));
 
         CustomerDTO cliente =  customerClient.findCustomerById(factura.getClienteId());
-        empParams.put("nombre_cliente", cliente.getRazon_social());
-        empParams.put("identificacion", cliente.getNro_identificacion());
+        reportParameters.put("nombre_cliente", cliente.getRazon_social());
+        reportParameters.put("identificacion", cliente.getNro_identificacion());
         
         List<Map<String, Object>> dataList = new ArrayList<>();
 
@@ -68,25 +65,21 @@ public class FacturaService {
             data.put("cantidad",linea.getCantidad());
             data.put("precio",linea.getPrecio());
             data.put("subtotal",linea.getCantidad().multiply(linea.getPrecio()));
-    
             dataList.add(data);
         }
+        reportParameters.put("facturaData", new JRBeanCollectionDataSource(dataList));
 
-        empParams.put("facturaData", new JRBeanCollectionDataSource(dataList));
-
-        JasperPrint empReport = null;
+        JasperPrint reportJasperPrint = null;
         try {
-            empReport = JasperFillManager.fillReport(
+            reportJasperPrint = JasperFillManager.fillReport(
                     JasperCompileManager.compileReport(
                             ResourceUtils.getFile("classpath:jrxml/factura.jrxml")
                                     .getAbsolutePath()) // path of the jasper report
-                    , empParams // dynamic parameters
+                    , reportParameters // dynamic parameters
                     , new JREmptyDataSource());
         } catch (FileNotFoundException | JRException e) {
             e.printStackTrace();
         }
-
-        return empReport;
-
+        return reportJasperPrint;
     }
 }
