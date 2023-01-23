@@ -30,7 +30,7 @@ import java.util.List;
 public class FacturaController {
     @Autowired FacturaService facturaService;
 
-    //@Operation(summary = "Obtiene todas las facturas")
+    @Operation(summary = "Obtiene todas las facturas")
     @GetMapping("/")
     public List<Factura> findAll(){
         return facturaService.findAll();

@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ProductoController {
     @Autowired ProductoService productoService;
 
-    //@Operation(summary = "Obtiene todos los productos registrados en este microservicio")
+    @Operation(summary = "Obtiene todos los productos registrados en este microservicio")
     @GetMapping("/")
     public List<Producto> findAll(){
         return productoService.findAll();
