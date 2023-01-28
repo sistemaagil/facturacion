@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -30,24 +31,22 @@ import io.swagger.v3.oas.annotations.Operation;
 public class ProductoController {
     @Autowired ProductoService productoService;
 
-        /**
-    * Returns an Image object that can then be painted on the screen. 
-    * The url argument must specify an absolute <a href="#{@link}">{@link URL}</a>. The name
-    * argument is a specifier that is relative to the url argument. 
-    * <p>
-    * This method always returns immediately, whether or not the 
-    * image exists. When this applet attempts to draw the image on
-    * the screen, the data will be loaded. The graphics primitives 
-    * that draw the image will incrementally paint on the screen. 
-    *
-    * @param  url  an absolute URL giving the base location of the image
-    * @param  name the location of the image, relative to the url argument
-    * @return      the image at the specified URL
-    * @see         Image
-    */
+
+    @GetMapping(value= "", params={"page","size","sort"})
+    public List<Producto> findAll(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "id") String sort){
+        return productoService.findAllWithPageAndSizeAndSort(page, size, sort);
+    }
+
     @GetMapping("/")
     public List<Producto> findAll(){
         return productoService.findAll();
+    }
+
+    @GetMapping("/count/")
+    public Long count(){
+        return productoService.count();
     }
 
     @Operation(summary = "Entrega un producto por su ID")
@@ -95,4 +94,6 @@ public class ProductoController {
         Producto entidadActualizada = productoService.save(product);
         return ResponseEntity.ok(entidadActualizada);
     }
+
+
 }
