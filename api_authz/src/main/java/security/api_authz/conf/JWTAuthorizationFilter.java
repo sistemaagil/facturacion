@@ -47,6 +47,9 @@ public class JWTAuthorizationFilter  extends HttpFilter {
         String token = header.replace(JWTUtil.TOKEN_PREFIX, "");
         
         String username = JWTUtil.getUsername(token);
+
+        if (JWTUtil.isExpiered(token))
+            return null;
         
         User usuario = userService.getUserWithAuthoritiesByUsername(username);
         

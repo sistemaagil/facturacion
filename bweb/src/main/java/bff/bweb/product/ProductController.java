@@ -29,37 +29,36 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public class ProductController {
 
     @Autowired ProductClient client;
-    @Autowired UserClient userClient;
 
     @GetMapping("/")
-    public List<ProductDTO> findAll(@RequestHeader("Authorization") String authHeader) {
-        return client.findAll(authHeader);
+    public List<ProductDTO> findAll() {
+        return client.findAll();
     }
     
     @GetMapping("/{id}/")
-    public ProductDTO findById(@RequestHeader("Authorization") String authHeader, @PathVariable Long id){
-        return client.findProductById(authHeader, id);
+    public ProductDTO findById(@PathVariable Long id){
+        return client.findProductById(id);
     }
 
     @PostMapping("/")
-    public ProductDTO save(@RequestHeader("Authorization") String authHeader, @RequestBody ProductDTO entity){
-        return client.save(authHeader, entity);
+    public ProductDTO save(@RequestBody ProductDTO entity){
+        return client.save(entity);
     }
 
     @DeleteMapping("/{id}/")
-    public void deleteById(@RequestHeader("Authorization") String authHeader, @PathVariable Long id){
-        client.deleteById(authHeader, id);
+    public void deleteById(@PathVariable Long id){
+        client.deleteById(id);
     }
 
     @PutMapping("/{id}/")
-    public ProductDTO update(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody ProductDTO entity){
-        return client.update(authHeader, id, entity);
+    public ProductDTO update(@PathVariable Long id, @RequestBody ProductDTO entity){
+        return client.update(id, entity);
     }
     
     @PatchMapping("/{id}/")
-    public ProductDTO partialUpdate(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody Map<String, Object> fields){
+    public ProductDTO partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> fields){
 
-        ProductDTO ProductDTO = client.findProductById(authHeader, id);
+        ProductDTO ProductDTO = client.findProductById(id);
 
         // itera sobre los campos que se desean actualizar
         for (Map.Entry<String, Object> field : fields.entrySet()) {
@@ -75,6 +74,6 @@ public class ProductController {
                 // maneja la excepción si ocurre algún error al acceder al campo
             }
         }
-        return client.update(authHeader, id, ProductDTO);
+        return client.update(id, ProductDTO);
     }
 }

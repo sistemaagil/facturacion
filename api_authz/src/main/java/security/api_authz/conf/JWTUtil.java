@@ -18,7 +18,7 @@ public class JWTUtil {
     public static final String TOKEN_HEADER="Authorization";
     public static final String TOKEN_PREFIX="Bearer ";
     private static final String SECRET="$2a$12$r8pfiCwWEGH0lavcBqcmJOYqEm.VoaUqq6VtuzKFEgaVTRFNVo1ea";
-    private static final long EXPIRATION=72000000;
+    private static final long EXPIRATION=12000;
     private static final String ROLE_CLAIMS="rol";
 
 
@@ -46,5 +46,10 @@ public class JWTUtil {
                 .setSigningKey(SECRET)
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public static boolean isExpiered(String token) throws SignatureException{
+
+            return getTokenBody(token).getExpiration().before(new Date(System.currentTimeMillis()));
     }
 }
