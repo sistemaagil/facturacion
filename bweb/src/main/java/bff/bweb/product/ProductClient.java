@@ -3,6 +3,7 @@ package bff.bweb.product;
 import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,9 @@ public interface ProductClient {
 
     @GetMapping("/{id}/")
     ProductDTO findProductById(@PathVariable("id") Long id);
+
+    @GetMapping("/")
+    List<ProductDTO> findAll(@SpringQueryMap QParams params);
 
     @GetMapping("/")
     List<ProductDTO> findAll();

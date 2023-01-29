@@ -32,7 +32,7 @@ public class ProductoController {
     @Autowired ProductoService productoService;
 
 
-    @GetMapping(value= "", params={"page","size","sort"})
+    @GetMapping(value= "/", params={"page","size","sort"})
     public List<Producto> findAll(@RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "10") int size,
                                         @RequestParam(defaultValue = "id") String sort){

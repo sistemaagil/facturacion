@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bff.bweb.authz.UserClient;
@@ -29,6 +30,15 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public class ProductController {
 
     @Autowired ProductClient client;
+
+    @GetMapping(value= "/", params={"page","size","sort"})
+    public List<ProductDTO> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "0") int size, @RequestParam(defaultValue = "0") String sort) {
+        QParams params = new QParams();
+        params.setPage(page);
+        params.setSize(size);
+        params.setSort(sort);
+        return client.findAll(params);
+    }
 
     @GetMapping("/")
     public List<ProductDTO> findAll() {
