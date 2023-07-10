@@ -16,21 +16,21 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface FacturaClient {
 
     @GetMapping("/{id}/")
-    FacturaDTO findFacturaById(@RequestHeader("Authorization") String authHeader, @PathVariable("id") Long id);
+    FacturaDTO findFacturaById(@PathVariable("id") Long id);
 
     @GetMapping("/pdf/{id}/")
-    ResponseEntity<byte[]> pdfById(@RequestHeader("Authorization") String authHeader, @PathVariable("id") Long id);
+    ResponseEntity<byte[]> pdfById( @PathVariable("id") Long id);
 
     @GetMapping("/")
-    List<FacturaDTO> findAll(@RequestHeader("Authorization") String authorizationHeader);
+    List<FacturaDTO> findAll();
 
     @PostMapping("/") 
-    FacturaDTO save(@RequestHeader("Authorization") String authorizationHeader, FacturaDTO entity);
+    FacturaDTO save(FacturaDTO entity);
 
     @DeleteMapping("/{id}/")
-    void deleteById(@RequestHeader("Authorization") String authorizationHeader,@PathVariable("id")  Long id);
+    void deleteById(@PathVariable("id")  Long id);
 
     @PutMapping("/{id}/")
-    FacturaDTO update(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("id")  Long id, FacturaDTO entity);
+    FacturaDTO update(@PathVariable("id")  Long id, FacturaDTO entity);
 
 }

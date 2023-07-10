@@ -29,39 +29,39 @@ public class FacturaController {
     @Autowired FacturaClient client;
 
     @GetMapping("/")
-    public List<FacturaDTO> findAll(@RequestHeader("Authorization") String authHeader) {
-        return client.findAll(authHeader);
+    public List<FacturaDTO> findAll() {
+        return client.findAll();
     }
     
     @GetMapping("/{id}/")
-    public FacturaDTO findById(@RequestHeader("Authorization") String authHeader, @PathVariable Long id){
-        return client.findFacturaById(authHeader, id);
+    public FacturaDTO findById(@PathVariable Long id){
+        return client.findFacturaById(id);
     }
 
     @GetMapping("/pdf/{id}/")
-    public ResponseEntity<byte[]> pdfById(@RequestHeader("Authorization") String authHeader, @PathVariable Long id){
-        return client.pdfById(authHeader, id);
+    public ResponseEntity<byte[]> pdfById(@PathVariable Long id){
+        return client.pdfById(id);
     }
 
     @PostMapping("/")
-    public FacturaDTO save(@RequestHeader("Authorization") String authHeader, @RequestBody FacturaDTO entity){
-        return client.save(authHeader, entity);
+    public FacturaDTO save(@RequestBody FacturaDTO entity){
+        return client.save(entity);
     }
 
     @DeleteMapping("/{id}/")
-    public void deleteById(@RequestHeader("Authorization") String authHeader, @PathVariable Long id){
-        client.deleteById(authHeader, id);
+    public void deleteById(@PathVariable Long id){
+        client.deleteById( id);
     }
 
     @PutMapping("/{id}/")
-    public FacturaDTO update(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody FacturaDTO entity){
-        return client.update(authHeader, id, entity);
+    public FacturaDTO update(@PathVariable Long id, @RequestBody FacturaDTO entity){
+        return client.update( id, entity);
     }
     
     @PatchMapping("/{id}/")
-    public FacturaDTO partialUpdate(@RequestHeader("Authorization") String authHeader, @PathVariable Long id, @RequestBody Map<String, Object> fields){
+    public FacturaDTO partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> fields){
 
-        FacturaDTO FacturaDTO = client.findFacturaById(authHeader, id);
+        FacturaDTO FacturaDTO = client.findFacturaById( id);
 
         // itera sobre los campos que se desean actualizar
         for (Map.Entry<String, Object> field : fields.entrySet()) {
@@ -77,6 +77,6 @@ public class FacturaController {
                 // maneja la excepción si ocurre algún error al acceder al campo
             }
         }
-        return client.update(authHeader, id, FacturaDTO);
+        return client.update( id, FacturaDTO);
     }
 }
