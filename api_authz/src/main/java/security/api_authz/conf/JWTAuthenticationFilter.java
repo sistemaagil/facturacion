@@ -107,7 +107,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
                 throws IOException, ServletException {
             response.setStatus(401);
-            response.setContentType("application/json");
+            response.setContentType("application/json; charset=utf-8");
             response.getWriter().append(json(exception.getLocalizedMessage()));
 
         }
@@ -117,7 +117,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             return "{\"timestamp\": " + date + ", "
                 + "\"status\": 401, "
                 + "\"error\": \"Not authorized\", "
-                + "\"message\": "+ message+ ", "
+                + "\"message\": \""+ message+ "\", "
                 + "\"path\": \"/login\"}";
         }
 	}
